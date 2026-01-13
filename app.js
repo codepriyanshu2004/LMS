@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import userRoutes from "./routes/user.routes.js"
 
 const app = express();
 
@@ -14,15 +15,26 @@ app.use(cors({
     origin: [process.env.FRONTEND_URL],
     credentials:true
 }));
+
 app.use(morgan("dev"));
 
 app.use(cookieParser());
+
+
+
 
 app.use("/ping",(req,res)=>{
     res.send("You are in the root")
 })
 
 //routes of 3 modules
+
+app.use("/api/v1/user",userRoutes);
+
+
+
+
+
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
