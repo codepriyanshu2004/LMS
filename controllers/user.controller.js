@@ -1,4 +1,4 @@
-
+import User from "../model/user.model"
 
 const register = (req,res) =>{
 

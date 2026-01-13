@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import userRoutes from "./routes/user.routes.js"
+import errorMiddleware from "./middleware/error.middleware.js";
 
 const app = express();
 
@@ -39,6 +40,8 @@ app.use("/api/v1/user",userRoutes);
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
+
+app.use(errorMiddleware);
 
 
 export default app;
