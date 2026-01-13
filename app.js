@@ -1,0 +1,32 @@
+import {config} from "dotenv";
+config();
+
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+
+const app = express();
+
+app.use(express.json());
+
+app.use(cors({
+    origin: [process.env.FRONTEND_URL],
+    credentials:true
+}));
+app.use(morgan("dev"));
+
+app.use(cookieParser());
+
+app.use("/ping",(req,res)=>{
+    res.send("You are in the root")
+})
+
+//routes of 3 modules
+
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+
+export default app;
