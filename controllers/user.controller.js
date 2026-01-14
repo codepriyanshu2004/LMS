@@ -15,7 +15,7 @@ const register = async(req,res,next) =>{
 
     }
 
-    const userExist = User.findOne(email);
+    const userExist = User.findOne({email});
 
     if(userExist){
         return next(new AppError("Email already exist",400));
@@ -55,9 +55,43 @@ const register = async(req,res,next) =>{
 
 };
 
-const login = (req,res) =>{
+const login = async (req,res) =>{
     
-}
+    const {email,password} = req.body;
+
+   try {
+
+     if(!email || !password){
+        return next(new AppError("All field are required",400));
+
+    }
+
+    const user = await User.findOne({email}).select("+password");
+
+    if(!user || !user.comparePassword(password)){
+        return next(new AppError("Email or Password does not mathc",400));
+
+    }
+
+     const token = await user.generateJWTToken();
+     
+     user.password = undefined;
+
+    res.cookie("token",token,cookieOptions);
+
+    res.status(201).json({
+        success:true,
+        message:"User loggedin successfully",
+        user,
+    });
+    
+   } catch (error) {
+
+     return next(new AppError(e.message,500));
+   }
+
+
+} 
 
 const logout = (req,res) =>{
     
