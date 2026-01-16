@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import userRoutes from "./routes/user.routes.js"
 import errorMiddleware from "./middleware/error.middleware.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const app = express();
 
@@ -22,6 +23,11 @@ app.use(morgan("dev"));
 
 app.use(cookieParser());
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 
 
