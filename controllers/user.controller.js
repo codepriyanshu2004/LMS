@@ -1,3 +1,4 @@
+
 import User from "../model/user.model.js"
 import AppError from "../utils/error.util.js";
 
@@ -15,7 +16,7 @@ const register = async(req,res,next) =>{
 
     }
 
-    const userExist = User.findOne({email});
+    const userExist = await User.findOne({email});
 
     if(userExist){
         return next(new AppError("Email already exist",400));
@@ -55,7 +56,7 @@ const register = async(req,res,next) =>{
 
 };
 
-const login = async (req,res) =>{
+const login = async (req,res,next) =>{
     
     const {email,password} = req.body;
 
@@ -68,10 +69,18 @@ const login = async (req,res) =>{
 
     const user = await User.findOne({email}).select("+password");
 
-    if(!user || !user.comparePassword(password)){
-        return next(new AppError("Email or Password does not mathc",400));
-
+    
+    if (!user) {
+      return next(new AppError("Email or password does not match", 400));
     }
+
+   
+      const isPasswordCorrect = await user.comparePassword(password);
+
+    if (!isPasswordCorrect) {
+      return next(new AppError("Email or password does not match", 400));
+    }
+
 
      const token = await user.generateJWTToken();
      
@@ -87,11 +96,11 @@ const login = async (req,res) =>{
     
    } catch (error) {
 
-     return next(new AppError(e.message,500));
+     return next(new AppError(error.message,500));
    }
 
 
-} 
+} ;
 
 const logout = (req,res) =>{
 
@@ -111,7 +120,24 @@ const logout = (req,res) =>{
 
 
 
-const getProfile = (req,res) =>{
+const getProfile = async (req,res) =>{
+
+   try {
+
+     const userId = req.user.id;
+    const user = await User.findById(userId);
+    
+    res.status(200).json({
+        success:true,
+        message:"User details",
+        user
+    })
+    
+   } catch (e) {
+
+    return next(new AppError("Failed to fatch profile"),500);
+    
+   }
     
 }
 
