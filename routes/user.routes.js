@@ -10,7 +10,7 @@ router.post("/login",login);
 router.get("/logout",isLoggedIn,logout);
 router.get("/me",isLoggedIn, getProfile);
 router.post("/forgot-password",forgotPassword);
-router.post("reset-password",resetPassword);
+router.post("/reset-password/:resetToken",resetPassword);
 
 
 export default router;
