@@ -1,0 +1,56 @@
+import Course from "../model/course.model.js"
+import AppError from "../utils/error.util.js";
+
+const getAllCourses = async(req,res,next)=>{
+ 
+    try {
+ 
+    const courses = await Course.find({}).select("-lectures");
+
+    res.status.json({
+        success:true,
+        message:"All courses",
+        courses,
+
+    });
+        
+    } catch (error) {
+        return next(new AppError(error.message,500));
+    }
+
+
+}
+
+const getLecturesByCourseId = async(req,res,next)=>{
+    try {
+
+        const {id} = req.params;
+        console.log("Course Id >",id);
+        const course = await Course.findById(id);
+        console.log("Course detail >",course);
+        
+
+        if (!course){
+            return next(new AppError("Invalid course id",400))
+        }
+
+        res.status(200).json({
+            success:true,
+            message:"Course lectures fetched successfully",
+            lectures:course.lectures
+        })
+
+
+
+        
+    } catch (error) {
+        return next(new AppError(error.message,500));
+        
+    }
+
+}
+
+export{
+    getAllCourses,
+    getLecturesByCourseId
+}
