@@ -74,7 +74,7 @@ const createCourse = async(req,res,next) =>{
     });
 
     if(!course){
-        return next(new AppError("Course could not created, please try again"),500)
+        return next(new AppError("Course could not created, please try again",500))
     }
 
     if(req.file){
@@ -91,11 +91,11 @@ const createCourse = async(req,res,next) =>{
             course.thumbnail.secure_url = result.secure_url;
         }
 
-        fs.rm(`uploads/${req.file.filename}`);
+        await  fs.rm(`uploads/${req.file.filename}`)
 
             
         } catch (error) {
-             return next(new AppError(error.message),400)
+             return next(new AppError(error.message,400))
         }
        
     }
@@ -111,8 +111,54 @@ const createCourse = async(req,res,next) =>{
 
 }
 
+const updateCourse = async(req,res,next)=>{
+    
+    try {
+        const {id} = req.params;
+        const course = await Course.findByIdAndUpdate(id,{$set:req.body},{runValidators:true});
+        
+        if(!course){
+            return next (new AppError("Course with given id does not exits",500))
+        }
+
+        res.status(200).json({
+            success:true,
+            message:"Course updated successfully",
+            course
+        })
+    } catch (error) {
+        next(new AppError(error.message,500))
+    }
+}
+
+const removeCourse = async(req,res,next)=>{
+
+    try {
+
+        const {id} = req.params;
+
+        const course = await Course.findById(id);
+
+        if(!course){
+            next(new AppError("Course with given id does not exist",500))
+        }
+       
+        await Course.findByIdAndDelete(id);
+
+        res.json({
+            success:true,
+            message:"Course deleted successfully"
+        })
+        
+    } catch (error) {
+          next(new AppError(error.message,500))
+    }
+}
+
 export{
     getAllCourses,
     getLecturesByCourseId,
-    createCourse
+    createCourse,
+    updateCourse,
+    removeCourse
 }
