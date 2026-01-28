@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
+
 const userSchema = new Schema(
   {
     fullName: {
@@ -75,7 +76,7 @@ userSchema.methods.generateJWTToken = async function () {
     {
       id: this._id,
       email: this.email,
-      role: this.role
+      role: this.role,
     },
     process.env.JWT_SECRET,
 
