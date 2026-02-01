@@ -10,7 +10,7 @@ router.post("/", isLoggedIn, authorizedRoles("ADMIN"), upload.single("thumbnail"
 router.put("/:id", isLoggedIn, isLoggedIn, authorizedRoles("ADMIN"), updateCourse);
 router.delete("/:id",isLoggedIn, isLoggedIn, authorizedRoles("ADMIN"), removeCourse);
 
-router.post("/:id",upload.single("lecture"), addLectureToCourseById);
+router.post("/:id",isLoggedIn, authorizedRoles("ADMIN"), upload.single("lecture"), addLectureToCourseById);
 router.get("/:id",isLoggedIn, getLecturesByCourseId);
 
 export default router;

@@ -8,7 +8,8 @@ import morgan from "morgan";
 import userRoutes from "./routes/user.routes.js"
 import errorMiddleware from "./middleware/error.middleware.js";
 import { v2 as cloudinary } from "cloudinary";
-import courseRoutes from "./routes/course.route.js"
+import courseRoutes from "./routes/course.route.js";
+import paymentRoutes from "./routes/payment.route.js"
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/ping",(req,res)=>{
 
 app.use("/api/v1/user",userRoutes);
 app.use("/api/v1/courses",courseRoutes);
+app.use("/api/v1/payment",paymentRoutes);
 
 
 

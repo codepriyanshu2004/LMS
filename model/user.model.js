@@ -52,7 +52,14 @@ const userSchema = new Schema(
 
     forgotPasswordExpiry: {
       type: Date
+    },
+
+    subscription:{
+      id:String,
+      status:String
     }
+
+
   },
   {
     timestamps: true
@@ -77,6 +84,7 @@ userSchema.methods.generateJWTToken = async function () {
       id: this._id,
       email: this.email,
       role: this.role,
+      subscription: this.subscription
     },
     process.env.JWT_SECRET,
 
